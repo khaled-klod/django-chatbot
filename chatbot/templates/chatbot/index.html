@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>chatbot</title>
+
+	<script
+			  src="https://code.jquery.com/jquery-3.3.1.js"
+			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+			  crossorigin="anonymous"></script>
+
+</head>
+<body>
+	<div id = "test">
+		<p>Hello.Please provide us with your CV.</p>
+		<form id="cv_form">{% csrf_token %}
+  		<input type="submit" value="upload" id="btn1" >
+		</form>
+		<br>
+
+	</div>
+
+<br>
+
+	<form id="chatbot_form">{% csrf_token %}
+
+  <input type="text" name="reponse" id="rep" >
+  <input type="submit" value="Submit" id="btn">
+</form>
+</body>
+
+<script>
+
+$(document).on('submit','#cv_form',function(e){
+    	e.preventDefault();
+    	$.ajax({
+    		type:'POST',
+    		url:'/chatbot/cvmodule/',
+    		data:{
+    			csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+
+    		},
+
+    		success:function(){
+    		document.getElementById("test").innerHTML+="Welcome. Type READY when ready"
+    		document.getElementById("test").innerHTML+="<br>"
+    		document.getElementById("test").innerHTML+="<br>"
+
+    	}
+
+
+    	});
+
+    });
+</script>
+
+
+
+<script>
+    var i = 0;
+    $(document).on('submit','#chatbot_form',function(e){
+    	e.preventDefault();
+    	$.ajax({
+    		type:'POST',
+    		url:'/chatbot/genresp/',
+    		data:{
+    			rep:$('#rep').val(),
+    			question_id: i,
+    			csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+
+    		},
+    		dataType: 'json',
+    		success:function(data){
+
+        i = data.question_id;
+
+        i++;
+		var ch= document.getElementById('rep').value;
+		document.getElementById("test").innerHTML+= ch;
+				ch1= data.resp;
+		document.getElementById("test").innerHTML+= "<br>";
+		document.getElementById("test").innerHTML+= "<br>";
+		document.getElementById("test").innerHTML+= ch1;
+		document.getElementById("test").innerHTML+= "<br>";
+		document.getElementById("test").innerHTML+= "<br>";
+
+
+
+
+
+
+    	}
+
+
+    	});
+
+    });
+
+
+</script>
+</html>
