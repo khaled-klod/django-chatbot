@@ -37,7 +37,9 @@ def analyze_cv ():
                 break
             else:
                 s = s.firstChild
-        myfile = open("/home/medsteph/names_final.txt", "r")
+        my_path = os.path.abspath(os.path.dirname(__file__))
+        path= my_path+"/names_final.txt"
+        myfile = open(path, "r")
         st = str(s.nodeValue)
         st = st.lower()
         test = 0
