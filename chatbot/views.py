@@ -122,13 +122,22 @@ def genresp(request):
         reptext = request.POST['rep']
         i = int(request.POST['question_id'])
 
-        if i == 0 and change == False:
+        if i == 0 and change == False: #if we didn't change from intro to suite questions
             if reptext == "READY":
-                data = {
-                    'resp': intro_question[0],
-                    'question_id': i
-                }
-                return JsonResponse(data)
+                if(len(intro_question)>0): #Check if all info were collected
+                    data = {
+                        'resp': intro_question[0],
+                        'question_id': i
+                    }
+                    return JsonResponse(data)
+                else: #if all info were collected, move to suite questions
+                    change = True
+                    data = {
+                        'resp': suite_question[0],
+                        'question_id': 0
+                    }
+                    return JsonResponse(data)
+
 
         else:
 
@@ -141,7 +150,7 @@ def genresp(request):
                     'question_id': i
                 }
                 return JsonResponse(data)
-            elif not change:
+            elif not change: #all intro questions were asked
                 change = True
                 setattr(person, intro_response[i], reptext)
                 person.save()
