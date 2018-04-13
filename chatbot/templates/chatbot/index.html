@@ -30,7 +30,8 @@
 
     <br>
 
-<footer class="footer">
+<div class="footer">
+    <br>
       <div class="container">
         <span class="text-muted">
             <form id="chatbot_form" class="input-group mb-3">{% csrf_token %}
@@ -43,7 +44,7 @@
 
         </span>
       </div>
-</footer>
+</div>
 	
 </body>
 
@@ -94,13 +95,18 @@ $(document).on('submit','#cv_form',function(e){
 
         i++;
 		var ch= document.getElementById('rep').value;
-		document.getElementById("test").innerHTML+= ch;
+
+		document.getElementById("test").innerHTML+= "<div id="+'"'+"user"+i+'">'+ch+"</div>" ;
 				ch1= data.resp;
 		document.getElementById("test").innerHTML+= "<br>";
 		document.getElementById("test").innerHTML+= "<br>";
-		document.getElementById("test").innerHTML+= ch1;
+		document.getElementById("test").innerHTML+= "<div id="+'"'+"chatbot"+i+'">'+ch1+"</div>" ;
 		document.getElementById("test").innerHTML+= "<br>";
 		document.getElementById("test").innerHTML+= "<br>";
+
+		document.getElementById("rep").value="";
+		var $target = $('html,body');
+        $target.animate({scrollTop: $target.height()}, 1000);
 
 
 
