@@ -244,51 +244,81 @@ def genresp(request):
                         return JsonResponse(data)
                 # store skill ANG ask skill NODE
                 elif i == 5:
+                    if int(reptext) not in range(11):
+                        # error = True
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name = all_skills[2].skill_name
+                        data = {
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + skill_name,
+                            'question_id': i-1
+                        }
+                        return JsonResponse(data)
+                    else:
+                        setattr(person, suite_response[i], reptext)
+                        person.save()
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name1 = all_skills[2].skill_name
 
+                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
 
-                    setattr(person, suite_response[i], reptext)
-                    person.save()
-                    all_skills = Skills.objects.filter(app_id=app)
-                    skill_name1 = all_skills[2].skill_name
+                        skill_name = all_skills[3].skill_name
 
-                    p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
-
-                    skill_name = all_skills[3].skill_name
-
-                    data = {
-                        'resp': suite_question[i] + skill_name,
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+                        data = {
+                            'resp': suite_question[i] + skill_name,
+                            'question_id': i
+                        }
+                        return JsonResponse(data)
 
                 ## store skill NODE ask languages question
                 elif i == 6:
-                    setattr(person, suite_response[i], reptext)
-                    person.save()
-                    all_skills = Skills.objects.filter(app_id=app)
-                    skill_name1 = all_skills[3].skill_name
+                    if int(reptext) not in range(11):
+                        # error = True
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name = all_skills[3].skill_name
+                        data = {
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + skill_name,
+                            'question_id': i-1
+                        }
+                        return JsonResponse(data)
+                    else:
 
-                    p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
+                        setattr(person, suite_response[i], reptext)
+                        person.save()
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name1 = all_skills[3].skill_name
 
-                    rl = Characteristics.objects.get(app_id=app)
-                    req_lang = rl.required_language
+                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
 
-                    data = {
-                        'resp': suite_question[i] + req_lang,
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+                        rl = Characteristics.objects.get(app_id=app)
+                        req_lang = rl.required_language
+
+                        data = {
+                            'resp': suite_question[i] + req_lang,
+                            'question_id': i
+                        }
+                        return JsonResponse(data)
 
                 # ask teamworkQ store language
                 elif i == 7:
-                    req_lang = Characteristics.objects.get(app_id=app).required_language
-                    p_language = PersonLanguages.objects.create(id_person=person, language=req_lang, rating=reptext)
+                    if int(reptext) not in range(11):
+                        # error = True
+                        rl = Characteristics.objects.get(app_id=app)
+                        req_lang = rl.required_language
+                        data = {
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + req_lang,
+                            'question_id': i-1
+                        }
+                        return JsonResponse(data)
+                    else:
 
-                    data = {
-                        'resp': suite_question[i],
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+                        req_lang = Characteristics.objects.get(app_id=app).required_language
+                        p_language = PersonLanguages.objects.create(id_person=person, language=req_lang, rating=reptext)
+
+                        data = {
+                            'resp': suite_question[i],
+                            'question_id': i
+                        }
+                        return JsonResponse(data)
                 # store teamworkQ ask lastcomp
                 elif i == 8:
                     if reptext == "3":
