@@ -217,22 +217,35 @@ def genresp(request):
 
                 # store skill C++ ask skill ANG
                 elif i == 4:
-                    setattr(person, suite_response[i], reptext)
-                    person.save()
-                    all_skills = Skills.objects.filter(app_id=app)
-                    skill_name1 = all_skills[1].skill_name
+                    if int(reptext) not in range(11):
+                        # error = True
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name = all_skills[1].skill_name
+                        data = {
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + skill_name,
+                            'question_id': i-1
+                        }
+                        return JsonResponse(data)
+                    else:
 
-                    p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
+                        setattr(person, suite_response[i], reptext)
+                        person.save()
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name1 = all_skills[1].skill_name
 
-                    skill_name = all_skills[2].skill_name
+                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
 
-                    data = {
-                        'resp': suite_question[i] + skill_name,
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+                        skill_name = all_skills[2].skill_name
+
+                        data = {
+                            'resp': suite_question[i] + skill_name,
+                            'question_id': i
+                        }
+                        return JsonResponse(data)
                 # store skill ANG ask skill NODE
                 elif i == 5:
+
+
                     setattr(person, suite_response[i], reptext)
                     person.save()
                     all_skills = Skills.objects.filter(app_id=app)
