@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 
 from .cvmodule.cvmodule import analyze_cv
-
+import requests
 #from django.template import loader
 
 
@@ -15,6 +15,20 @@ from .models import Application
 from .models import PersonSkills
 from .models import PersonLanguages
 from .models import Characteristics
+from nltk.corpus import wordnet
+
+def get_word_synonyms_from_sent(word, sent):
+    word_synonyms = []
+    for synset in wordnet.synsets(word):
+        for lemma in synset.lemma_names():
+            if lemma in sent:
+                word_synonyms.append(lemma)
+    if len(word_synonyms)>0:
+        return True
+    else:
+        return False
+
+
 
 # Global variables:
 
@@ -30,7 +44,7 @@ experience_yearsQ = "How many working years experience do you have [ If you don'
 
 skillsQ = "Rate, on a scale of 10, your skills in: "
 languagesQ = "How would you rate your skills on a scale of 10 in "
-teamworkQ = "Which one of the following attributes do you consider to be your most relevant strength? 1)work independently, 2)work with one coworker, 3)work with a team"
+teamworkQ = "Which one of the following attributes do you consider to be your most relevant strength? \n 1)work independently \n 2)work with one coworker \n 3)work with a team"
 last_companyQ = "Give us one major company that you worked for"
 confidenceQ = "Which one of the following attributes do you consider to be your most relevant strength? 1)confident, 2)creative, 3)smart "
 past_universityQ = "From what university did you get your degree"
@@ -125,23 +139,34 @@ def genresp(request):
         i = int(request.POST['question_id'])
 
         if i == 0 and change == False: #if we didn't change from intro to suite questions and it's the very first BotMessage
-            if reptext == "READY":
+            r = requests.post('http://text-processing.com/api/sentiment/', data={'text': reptext})
+            response = r.json()['label']
+
+            if response == "pos" or response == "neutral":
                 if(len(intro_question)>0): #Check if all info were collected
                     data = {
-                        'resp': intro_question[0],
+                        'resp': 'Great. Let\'s begin.'+'\n'+ intro_question[0],
                         'question_id': i
                     }
                     return JsonResponse(data)
                 else: #if all info were collected, move to suite questions
                     change = True
                     data = {
-                        'resp': suite_question[0],
+                        'resp': 'Great '+ person.first_name+ '. Let\'s begin.'+'\n'+ suite_question[0],
                         'question_id': 0
                     }
                     return JsonResponse(data)
+            else:
+                data = {
+                    'resp': "Okay, let me know when you're ready",
+                    'question_id': i-1
+                }
+                return JsonResponse(data)
+
 
 
         else:
+
 
             if i < len(intro_question) and change == False: #we are still in the intro questions
 
@@ -164,7 +189,8 @@ def genresp(request):
             else:
                 #store age ask experience
                 if i == 1:
-                    setattr(person, suite_response[i], reptext)
+                    age=[int(s) for s in reptext.split() if s.isdigit()][0]
+                    setattr(person, suite_response[i], age)
                     person.save()
                     data = {
                         'resp': suite_question[i],
@@ -174,7 +200,8 @@ def genresp(request):
                 # store experience ask skill JAVA
 
                 elif i == 2:
-                    setattr(person, suite_response[i], reptext)
+                    experience = [int(s) for s in reptext.split() if s.isdigit()][0]
+                    setattr(person, suite_response[i], experience)
                     person.save()
                     all_skills = Skills.objects.filter(app_id=app)
                     skill_name = all_skills[0].skill_name
@@ -190,6 +217,7 @@ def genresp(request):
 
                 # store skill JAVA ask skill C++
                 elif i == 3:
+
                     if int(reptext) not in range(11):
                         # error = True
                         all_skills = Skills.objects.filter(app_id=app)
@@ -300,7 +328,7 @@ def genresp(request):
 
                 # ask teamworkQ store language
                 elif i == 7:
-                    if int(reptext) not in range(11):
+                    if int(reptext) not in range(11): #check errors
                         # error = True
                         rl = Characteristics.objects.get(app_id=app)
                         req_lang = rl.required_language
@@ -309,7 +337,7 @@ def genresp(request):
                             'question_id': i-1
                         }
                         return JsonResponse(data)
-                    else:
+                    else: #store language ask teamworkQ
 
                         req_lang = Characteristics.objects.get(app_id=app).required_language
                         p_language = PersonLanguages.objects.create(id_person=person, language=req_lang, rating=reptext)
@@ -321,7 +349,7 @@ def genresp(request):
                         return JsonResponse(data)
                 # store teamworkQ ask lastcomp
                 elif i == 8:
-                    if reptext == "3":
+                    if "3" or "team" or "group" or "three" in reptext or get_word_synonyms_from_sent('group',reptext) or get_word_synonyms_from_sent('team',reptext):
                         setattr(person, suite_response[i], 1)
                         person.save()
                     else:
@@ -347,7 +375,8 @@ def genresp(request):
                 # store confidence ask past universities
 
                 elif i == 10:
-                    if reptext == "1":
+                    print(get_word_synonyms_from_sent('confident',reptext))
+                    if get_word_synonyms_from_sent('confident',reptext) or "1" in reptext or "confidence" in reptext or "one" in reptext:
                         setattr(person, suite_response[i], 1)
                         person.save()
                     else:
