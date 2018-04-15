@@ -16,8 +16,9 @@ from .models import PersonSkills
 from .models import PersonLanguages
 from .models import Characteristics
 
-# Create your views here.
+# Global variables:
 
+error = False
 change = False
 app = Application.objects.get(id_application=1)
 person = Person(app_id=app)
@@ -117,12 +118,13 @@ def genresp(request):
     global suite_response
     global change
     global app
+    global error
 
     if request.method == 'POST':
         reptext = request.POST['rep']
         i = int(request.POST['question_id'])
 
-        if i == 0 and change == False: #if we didn't change from intro to suite questions
+        if i == 0 and change == False: #if we didn't change from intro to suite questions and it's the very first BotMessage
             if reptext == "READY":
                 if(len(intro_question)>0): #Check if all info were collected
                     data = {
@@ -141,7 +143,7 @@ def genresp(request):
 
         else:
 
-            if i < len(intro_question) and change == False:
+            if i < len(intro_question) and change == False: #we are still in the intro questions
 
                 setattr(person, intro_response[i], reptext)
                 person.save()
@@ -150,12 +152,12 @@ def genresp(request):
                     'question_id': i
                 }
                 return JsonResponse(data)
-            elif not change: #all intro questions were asked
+            elif not change: # all intro questions were asked
                 change = True
                 setattr(person, intro_response[i], reptext)
                 person.save()
                 data = {
-                    'resp': suite_question[0],
+                    'resp': suite_question[0], #ask age
                     'question_id': 0
                 }
                 return JsonResponse(data)
@@ -176,7 +178,7 @@ def genresp(request):
                     person.save()
                     all_skills = Skills.objects.filter(app_id=app)
                     skill_name = all_skills[0].skill_name
-                    print(skill_name)
+
 
                     data = {
                         'resp': suite_question[i] + skill_name,
@@ -188,20 +190,31 @@ def genresp(request):
 
                 # store skill JAVA ask skill C++
                 elif i == 3:
-                    setattr(person, suite_response[i], reptext)
-                    person.save()
-                    all_skills = Skills.objects.filter(app_id=app)
-                    skill_name1 = all_skills[0].skill_name
+                    if int(reptext) not in range(11):
+                        # error = True
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name = all_skills[0].skill_name
+                        data = {
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + skill_name,
+                            'question_id': i-1
+                        }
+                        return JsonResponse(data)
+                    else:
+                        setattr(person, suite_response[i], reptext)
+                        person.save()
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name1 = all_skills[0].skill_name
 
-                    p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
+                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
 
-                    skill_name = all_skills[1].skill_name
+                        skill_name = all_skills[1].skill_name
 
-                    data = {
-                        'resp': suite_question[i] + skill_name,
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+                        data = {
+                            'resp': suite_question[i] + skill_name,
+                            'question_id': i
+                        }
+                        return JsonResponse(data)
+
                 # store skill C++ ask skill ANG
                 elif i == 4:
                     setattr(person, suite_response[i], reptext)
