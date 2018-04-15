@@ -3,8 +3,7 @@ from django.http import HttpResponse, JsonResponse
 
 from .cvmodule.cvmodule import analyze_cv
 import requests
-#from django.template import loader
-
+# from django.template import loader
 
 
 from .models import Person
@@ -15,7 +14,12 @@ from .models import Application
 from .models import PersonSkills
 from .models import PersonLanguages
 from .models import Characteristics
+
 from nltk.corpus import wordnet
+from word2number import w2n
+
+
+# def correspond():
 
 def get_word_synonyms_from_sent(word, sent):
     word_synonyms = []
@@ -23,28 +27,56 @@ def get_word_synonyms_from_sent(word, sent):
         for lemma in synset.lemma_names():
             if lemma in sent:
                 word_synonyms.append(lemma)
-    if len(word_synonyms)>0:
+    if len(word_synonyms) > 0:
         return True
     else:
         return False
 
 
-
 # Global variables:
-
+_known = {
+    'zero': 0,
+    'one': 1,
+    'two': 2,
+    'three': 3,
+    'four': 4,
+    'five': 5,
+    'six': 6,
+    'seven': 7,
+    'eight': 8,
+    'nine': 9,
+    'ten': 10,
+    'eleven': 11,
+    'twelve': 12,
+    'thirteen': 13,
+    'fourteen': 14,
+    'fifteen': 15,
+    'sixteen': 16,
+    'seventeen': 17,
+    'eighteen': 18,
+    'nineteen': 19,
+    'twenty': 20,
+    'thirty': 30,
+    'forty': 40,
+    'fifty': 50,
+    'sixty': 60,
+    'seventy': 70,
+    'eighty': 80,
+    'ninety': 90
+}
 error = False
 change = False
 app = Application.objects.get(id_application=1)
 person = Person(app_id=app)
 intro_response = [""]
 intro_question = []
-
+age = 0
 ageQ = "How old are you?"
 experience_yearsQ = "How many working years experience do you have [ If you don't have any, TYPE 0]"
 
 skillsQ = "Rate, on a scale of 10, your skills in: "
 languagesQ = "How would you rate your skills on a scale of 10 in "
-teamworkQ = "Which one of the following attributes do you consider to be your most relevant strength? \n 1)work independently \n 2)work with one coworker \n 3)work with a team"
+teamworkQ = "Which one of the following attributes do you consider to be your most relevant strength?" + "\n" + "1)work independently" + "\n" + "2)work with one coworker" + "\n" + " 3)work with a team"
 last_companyQ = "Give us one major company that you worked for"
 confidenceQ = "Which one of the following attributes do you consider to be your most relevant strength? 1)confident, 2)creative, 3)smart "
 past_universityQ = "From what university did you get your degree"
@@ -132,34 +164,35 @@ def genresp(request):
     global suite_response
     global change
     global app
-    global error
+    global age
+
 
     if request.method == 'POST':
         reptext = request.POST['rep']
         i = int(request.POST['question_id'])
 
-        if i == 0 and change == False: #if we didn't change from intro to suite questions and it's the very first BotMessage
+        if i == 0 and change == False:  # if we didn't change from intro to suite questions and it's the very first BotMessage
             r = requests.post('http://text-processing.com/api/sentiment/', data={'text': reptext})
             response = r.json()['label']
 
             if response == "pos" or response == "neutral":
-                if(len(intro_question)>0): #Check if all info were collected
+                if (len(intro_question) > 0):  # Check if all info were collected
                     data = {
-                        'resp': 'Great. Let\'s begin.'+'\n'+ intro_question[0],
+                        'resp': 'Great. Let\'s begin.' + '\n' + intro_question[0],
                         'question_id': i
                     }
                     return JsonResponse(data)
-                else: #if all info were collected, move to suite questions
+                else:  # if all info were collected, move to suite questions
                     change = True
                     data = {
-                        'resp': 'Great '+ person.first_name+ '. Let\'s begin.'+'\n'+ suite_question[0],
+                        'resp': 'Great ' + person.first_name + '. Let\'s begin.' + '\n' + suite_question[0],
                         'question_id': 0
                     }
                     return JsonResponse(data)
             else:
                 data = {
                     'resp': "Okay, let me know when you're ready",
-                    'question_id': i-1
+                    'question_id': i - 1
                 }
                 return JsonResponse(data)
 
@@ -167,8 +200,7 @@ def genresp(request):
 
         else:
 
-
-            if i < len(intro_question) and change == False: #we are still in the intro questions
+            if i < len(intro_question) and change == False:  # we are still in the intro questions
 
                 setattr(person, intro_response[i], reptext)
                 person.save()
@@ -177,35 +209,59 @@ def genresp(request):
                     'question_id': i
                 }
                 return JsonResponse(data)
-            elif not change: # all intro questions were asked
+            elif not change:  # all intro questions were asked
                 change = True
                 setattr(person, intro_response[i], reptext)
                 person.save()
                 data = {
-                    'resp': suite_question[0], #ask age
+                    'resp': suite_question[0],  # ask age
                     'question_id': 0
                 }
                 return JsonResponse(data)
             else:
-                #store age ask experience
+                # store age ask experience
+
                 if i == 1:
-                    age=[int(s) for s in reptext.split() if s.isdigit()][0]
-                    setattr(person, suite_response[i], age)
-                    person.save()
-                    data = {
-                        'resp': suite_question[i],
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+
+                    if len([int(s) for s in reptext.split() if s.isdigit()] > 0):
+                        age = [int(s) for s in reptext.split() if s.isdigit()][0]
+                    else:
+                        try:
+                            age = int(w2n.word_to_num(reptext))
+
+                        except ValueError:
+                            data = {
+                                'resp': 'Please enter an age (number or words)' + '\n' + suite_question[i - 1],
+                                'question_id': i - 1
+                            }
+                            return JsonResponse(data)
+
+                    if age == 0:  # error
+                        data = {
+                            'resp': 'Please enter an age (number or words)' + '\n' + suite_question[i-1],
+                            'question_id': i-1
+                        }
+                        return JsonResponse(data)
+                    else:
+                        setattr(person, suite_response[i], age)
+                        person.save()
+                        data = {
+                            'resp': suite_question[i],
+                            'question_id': i
+                        }
+                        return JsonResponse(data)
                 # store experience ask skill JAVA
 
                 elif i == 2:
-                    experience = [int(s) for s in reptext.split() if s.isdigit()][0]
-                    setattr(person, suite_response[i], experience)
-                    person.save()
-                    all_skills = Skills.objects.filter(app_id=app)
-                    skill_name = all_skills[0].skill_name
+                    if len([int(s) for s in reptext.split() if s.isdigit()] > 0):
 
+                        experience = [int(s) for s in reptext.split() if s.isdigit()][0]
+                        setattr(person, suite_response[i], experience)
+                    else:
+
+                        person.save()
+                        all_skills = Skills.objects.filter(app_id=app)
+                        skill_name = all_skills[0].skill_name
 
                     data = {
                         'resp': suite_question[i] + skill_name,
@@ -223,8 +279,9 @@ def genresp(request):
                         all_skills = Skills.objects.filter(app_id=app)
                         skill_name = all_skills[0].skill_name
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + skill_name,
-                            'question_id': i-1
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
+                                    suite_question[i - 1] + skill_name,
+                            'question_id': i - 1
                         }
                         return JsonResponse(data)
                     else:
@@ -250,8 +307,9 @@ def genresp(request):
                         all_skills = Skills.objects.filter(app_id=app)
                         skill_name = all_skills[1].skill_name
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + skill_name,
-                            'question_id': i-1
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
+                                    suite_question[i - 1] + skill_name,
+                            'question_id': i - 1
                         }
                         return JsonResponse(data)
                     else:
@@ -277,8 +335,9 @@ def genresp(request):
                         all_skills = Skills.objects.filter(app_id=app)
                         skill_name = all_skills[2].skill_name
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + skill_name,
-                            'question_id': i-1
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
+                                    suite_question[i - 1] + skill_name,
+                            'question_id': i - 1
                         }
                         return JsonResponse(data)
                     else:
@@ -304,8 +363,9 @@ def genresp(request):
                         all_skills = Skills.objects.filter(app_id=app)
                         skill_name = all_skills[3].skill_name
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + skill_name,
-                            'question_id': i-1
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
+                                    suite_question[i - 1] + skill_name,
+                            'question_id': i - 1
                         }
                         return JsonResponse(data)
                     else:
@@ -328,16 +388,17 @@ def genresp(request):
 
                 # ask teamworkQ store language
                 elif i == 7:
-                    if int(reptext) not in range(11): #check errors
+                    if int(reptext) not in range(11):  # check errors
                         # error = True
                         rl = Characteristics.objects.get(app_id=app)
                         req_lang = rl.required_language
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10."+"/n" + suite_question[i-1] + req_lang,
-                            'question_id': i-1
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
+                                    suite_question[i - 1] + req_lang,
+                            'question_id': i - 1
                         }
                         return JsonResponse(data)
-                    else: #store language ask teamworkQ
+                    else:  # store language ask teamworkQ
 
                         req_lang = Characteristics.objects.get(app_id=app).required_language
                         p_language = PersonLanguages.objects.create(id_person=person, language=req_lang, rating=reptext)
@@ -349,7 +410,9 @@ def genresp(request):
                         return JsonResponse(data)
                 # store teamworkQ ask lastcomp
                 elif i == 8:
-                    if "3" or "team" or "group" or "three" in reptext or get_word_synonyms_from_sent('group',reptext) or get_word_synonyms_from_sent('team',reptext):
+                    if "3" or "team" or "group" or "three" in reptext or get_word_synonyms_from_sent('group',
+                                                                                                     reptext) or get_word_synonyms_from_sent(
+                            'team', reptext):
                         setattr(person, suite_response[i], 1)
                         person.save()
                     else:
@@ -375,8 +438,9 @@ def genresp(request):
                 # store confidence ask past universities
 
                 elif i == 10:
-                    print(get_word_synonyms_from_sent('confident',reptext))
-                    if get_word_synonyms_from_sent('confident',reptext) or "1" in reptext or "confidence" in reptext or "one" in reptext:
+                    print(get_word_synonyms_from_sent('confident', reptext))
+                    if get_word_synonyms_from_sent('confident',
+                                                   reptext) or "1" in reptext or "confidence" in reptext or "one" in reptext:
                         setattr(person, suite_response[i], 1)
                         person.save()
                     else:
