@@ -80,7 +80,7 @@ teamworkQ = "Which one of the following attributes do you consider to be your mo
 last_companyQ = "Give us one major company that you worked for"
 confidenceQ = "Which one of the following attributes do you consider to be your most relevant strength? 1)confident, 2)creative, 3)smart "
 past_universityQ = "From what university did you get your degree"
-salary_expectationQ = "Thanks Kaled. Could you provide the salary range that would match your expectations?"
+salary_expectationQ = "Thanks. What is your salary expectation in dollars?"
 
 suite_question = [ageQ, experience_yearsQ, languagesQ, teamworkQ, last_companyQ, confidenceQ,
                   past_universityQ, salary_expectationQ]
@@ -223,7 +223,7 @@ def genresp(request):
 
                 if i == 1:
 
-                    if len([int(s) for s in reptext.split() if s.isdigit()] > 0):
+                    if len([int(s) for s in reptext.split() if s.isdigit()]) > 0:
                         age = [int(s) for s in reptext.split() if s.isdigit()][0]
                     else:
                         try:
@@ -253,15 +253,24 @@ def genresp(request):
                 # store experience ask skill JAVA
 
                 elif i == 2:
-                    if len([int(s) for s in reptext.split() if s.isdigit()] > 0):
-
+                    if len([int(s) for s in reptext.split() if s.isdigit()]) > 0:
                         experience = [int(s) for s in reptext.split() if s.isdigit()][0]
-                        setattr(person, suite_response[i], experience)
-                    else:
 
-                        person.save()
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name = all_skills[0].skill_name
+                    else:
+                        try:
+                            experience = int(w2n.word_to_num(reptext))
+
+                        except ValueError:
+                            data = {
+                                'resp': 'Please enter a number of years (number or words)' + '\n' + suite_question[i - 1],
+                                'question_id': i - 1
+                            }
+                            return JsonResponse(data)
+
+                    setattr(person, suite_response[i], experience)
+                    person.save()
+                    all_skills = Skills.objects.filter(app_id=app)
+                    skill_name = all_skills[0].skill_name
 
                     data = {
                         'resp': suite_question[i] + skill_name,
@@ -273,112 +282,177 @@ def genresp(request):
 
                 # store skill JAVA ask skill C++
                 elif i == 3:
+                    all_skills = Skills.objects.filter(app_id=app)
+                    skill_name_old = all_skills[0].skill_name
+                    skill_name_new = all_skills[1].skill_name
+                    try:
+                        rating = int(reptext)
 
-                    if int(reptext) not in range(11):
+                    except ValueError:
+                        try:
+                            rating = int(w2n.word_to_num(reptext))
+                        except ValueError:
+                            data = {
+                                'resp': 'Please enter a number between 1 and 10' + '\n' + suite_question[i - 1]+skill_name_old,
+                                'question_id': i - 1
+                            }
+                            return JsonResponse(data)
+
+                    if rating not in range(11):
                         # error = True
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name = all_skills[0].skill_name
+
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
-                                    suite_question[i - 1] + skill_name,
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "\n" +
+                                    suite_question[i - 1] + skill_name_old,
                             'question_id': i - 1
                         }
                         return JsonResponse(data)
                     else:
-                        setattr(person, suite_response[i], reptext)
-                        person.save()
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name1 = all_skills[0].skill_name
+                        #setattr(person, suite_response[i], reptext)
+                        #person.save()
 
-                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
-
-                        skill_name = all_skills[1].skill_name
+                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name_old, rating=rating)
 
                         data = {
-                            'resp': suite_question[i] + skill_name,
+                            'resp': suite_question[i] + skill_name_new,
                             'question_id': i
                         }
                         return JsonResponse(data)
 
                 # store skill C++ ask skill ANG
                 elif i == 4:
-                    if int(reptext) not in range(11):
+                    all_skills = Skills.objects.filter(app_id=app)
+                    skill_name_old = all_skills[1].skill_name
+                    skill_name_new = all_skills[2].skill_name
+                    try:
+                        rating = int(reptext)
+                    except ValueError:
+                        try:
+                            rating = int(w2n.word_to_num(reptext))
+                        except ValueError:
+                            data = {
+                                'resp': 'Please enter a number between 1 and 10' + '\n' + suite_question[
+                                    i - 1] + skill_name_old,
+
+                                'question_id': i - 1
+                            }
+                            return JsonResponse(data)
+
+                    if rating not in range(11):
                         # error = True
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name = all_skills[1].skill_name
+
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
-                                    suite_question[i - 1] + skill_name,
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "\n" +
+                                    suite_question[i - 1] + skill_name_old,
                             'question_id': i - 1
                         }
                         return JsonResponse(data)
                     else:
+                        # setattr(person, suite_response[i], reptext)
+                        # person.save()
 
-                        setattr(person, suite_response[i], reptext)
-                        person.save()
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name1 = all_skills[1].skill_name
-
-                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
-
-                        skill_name = all_skills[2].skill_name
+                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name_old,
+                                                               rating=rating)
 
                         data = {
-                            'resp': suite_question[i] + skill_name,
+                            'resp': suite_question[i] + skill_name_new,
                             'question_id': i
                         }
                         return JsonResponse(data)
                 # store skill ANG ask skill NODE
                 elif i == 5:
-                    if int(reptext) not in range(11):
+                    all_skills = Skills.objects.filter(app_id=app)
+                    skill_name_old = all_skills[2].skill_name
+                    skill_name_new = all_skills[3].skill_name
+                    try:
+                        rating = int(reptext)
+
+
+                    except ValueError:
+
+                        try:
+
+                            rating = int(w2n.word_to_num(reptext))
+
+                        except ValueError:
+
+                            data = {
+
+                                'resp': 'Please enter a number between 1 and 10' + '\n' + suite_question[
+                                    i - 1] + skill_name_old,
+
+                                'question_id': i - 1
+
+                            }
+
+                            return JsonResponse(data)
+
+                    if rating not in range(11):
                         # error = True
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name = all_skills[2].skill_name
+
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
-                                    suite_question[i - 1] + skill_name,
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "\n" +
+                                    suite_question[i - 1] + skill_name_old,
                             'question_id': i - 1
                         }
                         return JsonResponse(data)
                     else:
-                        setattr(person, suite_response[i], reptext)
-                        person.save()
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name1 = all_skills[2].skill_name
+                        # setattr(person, suite_response[i], reptext)
+                        # person.save()
 
-                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
-
-                        skill_name = all_skills[3].skill_name
+                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name_old,
+                                                               rating=rating)
 
                         data = {
-                            'resp': suite_question[i] + skill_name,
+                            'resp': suite_question[i] + skill_name_new,
                             'question_id': i
                         }
                         return JsonResponse(data)
 
                 ## store skill NODE ask languages question
                 elif i == 6:
-                    if int(reptext) not in range(11):
+                    all_skills = Skills.objects.filter(app_id=app)
+                    skill_name_old = all_skills[3].skill_name
+                    rl = Characteristics.objects.get(app_id=app)
+                    req_lang = rl.required_language
+                    try:
+                        rating = int(reptext)
+
+
+                    except ValueError:
+
+                        try:
+
+                            rating = int(w2n.word_to_num(reptext))
+
+                        except ValueError:
+
+                            data = {
+
+                                'resp': 'Please enter a number between 1 and 10' + '\n' + suite_question[
+                                    i - 1] + skill_name_old,
+
+                                'question_id': i - 1
+
+                            }
+
+                            return JsonResponse(data)
+
+                    if rating not in range(11):
                         # error = True
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name = all_skills[3].skill_name
+
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
-                                    suite_question[i - 1] + skill_name,
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "\n" +
+                                    suite_question[i - 1] + skill_name_old,
                             'question_id': i - 1
                         }
                         return JsonResponse(data)
                     else:
+                        # setattr(person, suite_response[i], reptext)
+                        # person.save()
 
-                        setattr(person, suite_response[i], reptext)
-                        person.save()
-                        all_skills = Skills.objects.filter(app_id=app)
-                        skill_name1 = all_skills[3].skill_name
-
-                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name1, rating=reptext)
-
-                        rl = Characteristics.objects.get(app_id=app)
-                        req_lang = rl.required_language
+                        p_skills = PersonSkills.objects.create(id_person=person, skill_name=skill_name_old,
+                                                               rating=rating)
 
                         data = {
                             'resp': suite_question[i] + req_lang,
@@ -388,36 +462,49 @@ def genresp(request):
 
                 # ask teamworkQ store language
                 elif i == 7:
-                    if int(reptext) not in range(11):  # check errors
+                    rl = Characteristics.objects.get(app_id=app)
+                    req_lang = rl.required_language
+                    try:
+                        rating = int(reptext)
+                    except ValueError:
+                        try:
+                            rating = int(w2n.word_to_num(reptext))
+                        except ValueError:
+                            data = {
+                                'resp': 'Please enter a number between 1 and 10' + '\n' + suite_question[i - 1] + req_lang,
+                                'question_id': i - 1
+                            }
+                            return JsonResponse(data)
+
+                    if rating not in range(11):
                         # error = True
-                        rl = Characteristics.objects.get(app_id=app)
-                        req_lang = rl.required_language
+
                         data = {
-                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "/n" +
+                            'resp': "The rating must be a POSITIVE Integer less or equal than 10." + "\n" +
                                     suite_question[i - 1] + req_lang,
                             'question_id': i - 1
                         }
                         return JsonResponse(data)
+
                     else:  # store language ask teamworkQ
-
-                        req_lang = Characteristics.objects.get(app_id=app).required_language
                         p_language = PersonLanguages.objects.create(id_person=person, language=req_lang, rating=reptext)
-
                         data = {
                             'resp': suite_question[i],
                             'question_id': i
                         }
                         return JsonResponse(data)
+
                 # store teamworkQ ask lastcomp
                 elif i == 8:
-                    if "3" or "team" or "group" or "three" in reptext or get_word_synonyms_from_sent('group',
-                                                                                                     reptext) or get_word_synonyms_from_sent(
-                            'team', reptext):
+                    if ("3"in reptext) or ("team"in reptext) or ("group"in reptext) or ("three" in reptext) or get_word_synonyms_from_sent('group',reptext) or get_word_synonyms_from_sent('team', reptext):
+                        print(get_word_synonyms_from_sent('group',reptext))
+                        print(get_word_synonyms_from_sent('team', reptext))
                         setattr(person, suite_response[i], 1)
                         person.save()
                     else:
                         setattr(person, suite_response[i], 0)
                         person.save()
+
                     data = {
                         'resp': suite_question[i],
                         'question_id': i
@@ -438,9 +525,8 @@ def genresp(request):
                 # store confidence ask past universities
 
                 elif i == 10:
-                    print(get_word_synonyms_from_sent('confident', reptext))
-                    if get_word_synonyms_from_sent('confident',
-                                                   reptext) or "1" in reptext or "confidence" in reptext or "one" in reptext:
+
+                    if get_word_synonyms_from_sent('confident',reptext) or ("1"in reptext) or ("confidence"in reptext) or ("one" in reptext):
                         setattr(person, suite_response[i], 1)
                         person.save()
                     else:
@@ -466,14 +552,38 @@ def genresp(request):
 
                 # store salary
                 elif i == 12:
+                    if len([int(s) for s in reptext.split() if s.isdigit()]) > 0:
+                        salary = [int(s) for s in reptext.split() if s.isdigit()][0]
+
+                    else:
+                        try:
+                            salary = int(w2n.word_to_num(reptext))
+
+                        except ValueError:
+                            data = {
+                                'resp': 'Please enter a number' + '\n' + suite_question[i - 1],
+                                'question_id': i - 1
+                            }
+                            return JsonResponse(data)
                     setattr(person, suite_response[i], reptext)
                     person.save()
+                    if person.sex=='male':
+                        data = {
+                            'resp': "Thank you Mr."+ person.last_name,
+                            'question_id': i
+                        }
+                    else:
+                        data = {
+                            'resp': "Thank you Mrs." + person.last_name,
+                            'question_id': i
+                        }
+                    return JsonResponse(data)
+                elif i == 13:
                     data = {
-                        'resp': "Thank you",
+                        'resp': '',
                         'question_id': i
                     }
                     return JsonResponse(data)
 
-        # call your function here and pass reptext
-        # call your function to get the response from the chatbot
-        # get your response and put in data
+
+

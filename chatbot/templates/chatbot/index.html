@@ -121,7 +121,8 @@ $(document).on('submit','#cv_form',function(e){
 		var ch= document.getElementById('rep').value;
 		$chat.append(' <strong>User</strong>: '+ch+'<br/> ');
         ch1= data.resp;
-        $chat.append(' <strong>Bot</strong>: '+ch1+'<br/> ');
+        if(ch1){
+        $chat.append(' <strong>Bot</strong>: '+ch1+'<br/> ');}
     	}
     	});
     });
