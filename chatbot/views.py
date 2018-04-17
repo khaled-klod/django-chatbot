@@ -536,7 +536,7 @@ def genresp(request):
                                 'question_id': i - 1
                             }
                             return JsonResponse(data)
-                    setattr(person, suite_response[i], reptext)
+                    setattr(person, suite_response[i], salary)
                     person.save()
                     if person.sex=='male':
                         data = {
