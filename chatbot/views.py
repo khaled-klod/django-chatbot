@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 
 from .cvmodule.cvmodule import analyze_cv
 import requests
+import nltk
 # from django.template import loader
 
 
@@ -14,6 +15,8 @@ from .models import Application
 from .models import PersonSkills
 from .models import PersonLanguages
 from .models import Characteristics
+from .models import Company
+from .models import University
 
 from nltk.corpus import wordnet
 from word2number import w2n
@@ -48,9 +51,9 @@ experience_yearsQ = "How many working years experience do you have [ If you don'
 skillsQ = "Rate, on a scale of 10, your skills in: "
 languagesQ = "How would you rate your skills on a scale of 10 in "
 teamworkQ = "Which one of the following attributes do you consider to be your most relevant strength?" + "\n" + "1)work independently" + "\n" + "2)work with one coworker" + "\n" + " 3)work with a team"
-last_companyQ = "Give us one major company that you worked for"
+last_companyQ = "Please give us one major company that you've worked for"
 confidenceQ = "Which one of the following attributes do you consider to be your most relevant strength? 1)confident, 2)creative, 3)smart "
-past_universityQ = "From what university did you get your degree"
+past_universityQ = "Please give us the university from which you got your degree"
 salary_expectationQ = "Thanks. What is your salary expectation in dollars?"
 
 suite_question = [ageQ, experience_yearsQ, languagesQ, teamworkQ, last_companyQ, confidenceQ,
@@ -58,6 +61,27 @@ suite_question = [ageQ, experience_yearsQ, languagesQ, teamworkQ, last_companyQ,
 suite_response = ["", "age", "experience_years", "languages", "teamwork", "last_company",
                   "confidence",
                   "past_university", "salary_expectation"]
+#Collect all company names
+companies = Company.objects.all()
+company_names = []
+for company in companies:
+    company_names.append(company.company_name)
+
+
+stored_company = False
+#Collect all university names and abbreviations
+universities = University.objects.all()
+
+university_names = []
+university_abbreviations = []
+
+for university in universities:
+    university_names.append(university.university_name)
+    print(university.university_name)
+    university_abbreviations.append(university.university_abbreviation)
+    print(university.university_abbreviation)
+
+stored_university = False
 
 
 def index(request):
@@ -136,9 +160,14 @@ def genresp(request):
     global change
     global app
     global age
-
+    global company_names
+    global university_names
+    global university_abbreviations
+    global stored_university
+    global stored_company
 
     if request.method == 'POST':
+
         reptext = request.POST['rep']
         i = int(request.POST['question_id'])
 
@@ -458,7 +487,7 @@ def genresp(request):
                         return JsonResponse(data)
 
                     else:  # store language ask teamworkQ
-                        p_language = PersonLanguages.objects.create(id_person=person, language=req_lang, rating=reptext)
+                        p_language = PersonLanguages.objects.create(id_person=person, language=req_lang, rating=rating)
                         data = {
                             'resp': suite_question[i],
                             'question_id': i
@@ -484,15 +513,33 @@ def genresp(request):
 
                 # store lastcomp ask confidence
                 elif i == 9:
-                    setattr(person, suite_response[i], reptext)
-                    person.save()
-                    data = {
-                        'resp': suite_question[i],
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+                    words = nltk.word_tokenize(reptext)
 
 
+                    for word in words:
+                        if word.upper() in company_names:
+
+                            stored_company = True
+                            break
+
+                    if not stored_company:
+                        setattr(person, suite_response[i], "None")
+                        person.save()
+                        data = {
+                            'resp': "No Company Given. "+suite_question[i],
+                            'question_id': i
+
+                        }
+                        return JsonResponse(data)
+                    else:
+                        setattr(person, suite_response[i], word.upper())
+                        person.save()
+                        data = {
+                            'resp': suite_question[i],
+                            'question_id': i
+
+                        }
+                        return JsonResponse(data)
                 # store confidence ask past universities
 
                 elif i == 10:
@@ -513,14 +560,43 @@ def genresp(request):
                 # store past uni ask salary
 
                 elif i == 11:
-                    setattr(person, suite_response[i], reptext)
-                    person.save()
-                    data = {
-                        'resp': suite_question[i],
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+                    words = nltk.word_tokenize(reptext)
 
+                    for word in words:
+                        if (word.upper() in university_names) or (word.upper() in university_abbreviations):
+                            stored_university = True
+                            setattr(person, suite_response[i], word.upper())
+                            person.save()
+                            break
+
+                    for university_name in university_names:
+                        if (university_name in reptext.upper()) or stored_company:
+                            stored_university = True
+                            setattr(person, suite_response[i], university_name)
+                            person.save()
+                            break
+                    for university_abbreviation in university_abbreviations:
+                        if (university_abbreviation in reptext.upper()) or stored_company:
+                            stored_university = True
+                            setattr(person, suite_response[i], university_abbreviation)
+                            person.save()
+                            break
+                    if not stored_university:
+                        setattr(person, suite_response[i], "None")
+                        person.save()
+                        data = {
+                            'resp': "No University Given" + suite_question[i],
+                            'question_id': i
+
+                        }
+                        return JsonResponse(data)
+                    else:
+                        data = {
+                            'resp': suite_question[i],
+                            'question_id': i
+
+                        }
+                        return JsonResponse(data)
                 # store salary
                 elif i == 12:
                     if len([int(s) for s in reptext.split() if s.isdigit()]) > 0:

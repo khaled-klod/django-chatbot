@@ -112,17 +112,26 @@ $(document).on('submit','#cv_form',function(e){
     		data:{
     			rep:$('#rep').val(),
     			question_id: i,
+
     			csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
     		},
     		dataType: 'json',
     		success:function(data){
         i = data.question_id;
+
         i++;
+        //show the answer (i-1)
 		var ch= document.getElementById('rep').value;
 		$chat.append(' <strong>User</strong>: '+ch+'<br/> ');
-        ch1= data.resp;
-        if(ch1){
-        $chat.append(' <strong>Bot</strong>: '+ch1+'<br/> ');}
+        //show the question (i)
+
+            ch1= data.resp;
+                if(ch1)
+                {
+                $chat.append(' <strong>Bot</strong>: '+ch1+'<br/> ');
+                }
+
+
     	}
     	});
     });
