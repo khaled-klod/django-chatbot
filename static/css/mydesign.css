@@ -1,8 +1,38 @@
-.footer {
-   position:fixed;
-   right:-891px;
-   bottom:43px;
-   height:30px;
-   width:250%;
 
-}
+            #container{
+                width:700px;
+                margin:0 auto;
+            }
+            #chatWindow{
+                height: 300px;
+                overflow-y: auto;
+            }
+            #mainWrapper{
+                  display: none;
+                  position: absolute;
+                  width: 300px;
+                  height: 200px;
+                  z-index: 15;
+                  top: 30%;
+                  left: 50%;
+                  margin: -100px 0 0 -150px;
+
+            }
+            #chatWrapper{
+                float:left;
+                border:1px #ccc solid;
+                border-radius: 10px;
+                background: #f4f4f4;
+                padding: 10px;
+            }
+            #test{
+                float: left;
+                border:1px #ccc solid;
+                border-radius: 10px;
+                background: #f4f4f4;
+                padding:10px;
+                margin-left:20px;
+            }
+            body{
+            background: #f9f9f9;
+            }
