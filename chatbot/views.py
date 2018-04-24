@@ -46,7 +46,7 @@ intro_response = [""]
 intro_question = []
 age = 0
 ageQ = "How old are you?"
-experience_yearsQ = "How many working years experience do you have [ If you don't have any, TYPE 0]"
+experience_yearsQ = "How many working years experience do you have?"
 
 skillsQ = "Rate, on a scale of 10, your skills in: "
 languagesQ = "How would you rate your skills on a scale of 10 in "
