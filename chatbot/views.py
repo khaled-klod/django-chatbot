@@ -17,7 +17,7 @@ from .models import PersonLanguages
 from .models import Characteristics
 from .models import Company
 from .models import University
-
+from . import forms
 from nltk.corpus import wordnet
 from word2number import w2n
 
@@ -631,6 +631,11 @@ def genresp(request):
                         'question_id': i
                     }
                     return JsonResponse(data)
+
+
+def application(request):
+    form = forms.applicationForm
+    return render(request,'chatbot/application.html',{'form':form})
 
 
 

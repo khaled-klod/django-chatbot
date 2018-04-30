@@ -14,6 +14,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('genresp/', views.genresp, name='genresp'),
     path('cvmodule/',views.cvmodule, name='cvmodule'),
+    path('application/',views.application, name='application'),
 
 ]
 
