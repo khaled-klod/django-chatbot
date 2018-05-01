@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, JsonResponse
 
 from .cvmodule.cvmodule import analyze_cv
@@ -634,8 +634,17 @@ def genresp(request):
 
 
 def application(request):
-    form = forms.applicationForm
-    return render(request,'chatbot/application.html',{'form':form})
+    if (request.method=='POST'):
+        form = forms.applicationForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            return HttpResponse('')
+        else:
+            return render_to_response('chatbot/application.html',{'form':form})
+    else:#get method
+        form = forms.applicationForm
+        return render(request,'chatbot/application.html',{'form':form})
 
 
 
