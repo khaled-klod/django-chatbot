@@ -89,7 +89,13 @@ $(document).on('submit','#cv_form',function(e){
 
     		
         i = data.question_id;
+        if( i == 13) {
+        id_person = data.id_person
+        id_application = data.id_application
 
+        alert('You will be redirected to the Ratings Page')
+        window.location.replace("http://localhost:8000/chatbot/ratingpage/?id_person="+id_person+"&id_application="+id_application);
+        }
         i++;
         //show the answer (i-1)
 		var ch= document.getElementById('rep').value;

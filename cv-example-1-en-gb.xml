@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pdf2xml SYSTEM "pdf2xml.dtd">
+
+<pdf2xml producer="poppler" version="0.61.1">
+<page number="1" position="absolute" top="0" left="0" height="1263" width="892">
+	<fontspec id="0" size="13" family="Times" color="#1493cb"/>
+	<fontspec id="1" size="11" family="Times" color="#0d4194"/>
+	<fontspec id="2" size="17" family="Times" color="#3e3a37"/>
+	<fontspec id="3" size="11" family="Times" color="#3e3a37"/>
+	<fontspec id="4" size="11" family="Times" color="#1493cb"/>
+	<fontspec id="5" size="10" family="Times" color="#1493cb"/>
+	<fontspec id="6" size="4" family="Times" color="#402b23"/>
+	<fontspec id="7" size="14" family="Times" color="#0d4194"/>
+	<fontspec id="8" size="10" family="Times" color="#3e3a37"/>
+	<fontspec id="9" size="8" family="Times" color="#25b4ea"/>
+	<fontspec id="10" size="8" family="Times" color="#1493cb"/>
+<image top="213" left="409" width="15" height="15" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-1_1.png"/>
+<image top="402" left="276" width="566" height="11" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-1_2.jpg"/>
+<image top="883" left="277" width="566" height="11" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-1_3.jpg"/>
+<image top="187" left="276" width="15" height="17" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-1_4.jpg"/>
+<image top="264" left="276" width="15" height="16" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-1_5.jpg"/>
+<image top="238" left="276" width="15" height="17" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-1_6.jpg"/>
+<image top="51" left="64" width="191" height="55" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-1_7.jpg"/>
+<image top="213" left="276" width="15" height="15" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-1_8.jpg"/>
+<text top="76" left="64" width="4" height="17" font="0"> </text>
+<text top="76" left="277" width="104" height="17" font="0">Curriculum Vitae</text>
+<text top="152" left="93" width="162" height="15" font="1">PERSONAL INFORMATION</text>
+<text top="147" left="276" width="101" height="22" font="2">Betty Smith </text>
+<text top="188" left="300" width="299" height="15" font="3">32 Reading rd,Birmingham B26 3QJ United Kingdom </text>
+<text top="215" left="300" width="234" height="15" font="3">+44 2012345679     +44 7123456789    </text>
+<text top="239" left="300" width="114" height="15" font="3">smith@kotmail.com </text>
+<text top="264" left="300" width="167" height="15" font="4">AOL Instant Messenger (AIM)</text>
+<text top="264" left="467" width="72" height="15" font="3"> betty.smith  </text>
+<text top="300" left="276" width="22" height="15" font="4">Sex</text>
+<text top="301" left="299" width="3" height="13" font="5"> </text>
+<text top="300" left="302" width="46" height="15" font="3">Female </text>
+<text top="300" left="348" width="78" height="15" font="4">| Date of birth </text>
+<text top="300" left="426" width="88" height="15" font="3">01 March 1975 </text>
+<text top="350" left="143" width="112" height="15" font="1">JOB APPLIED FOR</text>
+<text top="346" left="276" width="221" height="22" font="2">European project manager</text>
+<text top="398" left="129" width="126" height="15" font="1">WORK EXPERIENCE</text>
+<text top="406" left="842" width="2" height="7" font="6"> </text>
+<text top="430" left="126" width="128" height="15" font="1">August 2002 – Present</text>
+<text top="428" left="276" width="162" height="18" font="7">Independent consultant</text>
+<text top="451" left="276" width="80" height="15" font="3">British Council</text>
+<text top="466" left="276" width="197" height="15" font="3">123, Bd Ney, 75023 Paris (France) </text>
+<text top="490" left="276" width="485" height="15" font="3">Evaluation of European Commission youth training support measures for youth national</text>
+<text top="506" left="276" width="154" height="15" font="3">agencies and young people</text>
+<text top="551" left="120" width="135" height="15" font="1">March 2002 – July 2002</text>
+<text top="549" left="276" width="68" height="18" font="7">Internship</text>
+<text top="572" left="276" width="345" height="15" font="3">European Commission, Youth Unit, DG Education and Culture</text>
+<text top="587" left="276" width="249" height="15" font="3">200, Rue de la Loi, 1049 Brussels (Belgium) </text>
+<text top="611" left="276" width="483" height="15" font="3">- evaluating youth training programmes for SALTO UK and the partnership between the</text>
+<text top="627" left="276" width="256" height="15" font="3">Council of Europe and European Commission</text>
+<text top="642" left="276" width="555" height="15" font="3">- organizing and running a 2 day workshop on non-formal education for Action 5 large scale projects </text>
+<text top="658" left="276" width="266" height="15" font="3">focusing on quality, assessment and recognition</text>
+<text top="673" left="276" width="488" height="15" font="3">- contributing to the steering sroup on training and developing action plans on training for</text>
+<text top="689" left="276" width="465" height="15" font="3">the next 3 years. Working on the Users Guide for training and the support measures</text>
+<text top="714" left="276" width="107" height="15" font="4">Business or sector </text>
+<text top="714" left="383" width="111" height="15" font="3">European institution</text>
+<text top="716" left="494" width="3" height="13" font="8"> </text>
+<text top="759" left="82" width="172" height="15" font="1">October 2001 – February 2002</text>
+<text top="757" left="276" width="259" height="18" font="7">Researcher / Independent Consultant</text>
+<text top="780" left="276" width="223" height="15" font="3">Council of Europe, Budapest (Hungary) </text>
+<text top="804" left="276" width="525" height="15" font="3">Working in a research team carrying out in-depth qualitative evaluation of the 2 year Advanced </text>
+<text top="820" left="276" width="550" height="15" font="3">Training of Trainers in Europe using participant observations, in-depth interviews and focus groups. </text>
+<text top="835" left="276" width="413" height="15" font="3">Work carried out in training courses in Strasbourg, Slovenia and Budapest.</text>
+<text top="877" left="87" width="168" height="15" font="1">EDUCATION AND TRAINING</text>
+<text top="886" left="842" width="2" height="7" font="6"> </text>
+<text top="910" left="184" width="71" height="15" font="1">1997 – 2001</text>
+<text top="908" left="276" width="457" height="18" font="7">PhD - Thesis Title: 'Young People in the Construction of the Virtual </text>
+<text top="927" left="276" width="303" height="18" font="7">University’, Empirical research on e-learning</text>
+<text top="950" left="276" width="239" height="15" font="3">Brunel University, London United Kingdom </text>
+<text top="1001" left="184" width="71" height="15" font="1">1993 – 1997</text>
+<text top="999" left="276" width="341" height="18" font="7">Bachelor of Science in Sociology and Psychology</text>
+<text top="1022" left="276" width="239" height="15" font="3">Brunel University, London United Kingdom </text>
+<text top="1046" left="276" width="96" height="15" font="3">- sociology of risk</text>
+<text top="1062" left="276" width="302" height="15" font="3">- sociology of scientific knowledge / information society</text>
+<text top="1077" left="276" width="81" height="15" font="3">- anthropology</text>
+<text top="1093" left="276" width="150" height="15" font="3">E-learning and Psychology</text>
+<text top="1108" left="276" width="109" height="15" font="3">- research methods</text>
+<text top="1195" left="277" width="3" height="12" font="9"> </text>
+<text top="1195" left="279" width="285" height="12" font="10">© European Union, 2002-2013 | http://europass.cedefop.europa.eu </text>
+<text top="1195" left="793" width="23" height="12" font="10">Page</text>
+<text top="1195" left="816" width="3" height="12" font="9"> </text>
+<text top="1195" left="819" width="23" height="12" font="10">1 / 2 </text>
+</page>
+<page number="2" position="absolute" top="0" left="0" height="1263" width="892">
+	<fontspec id="11" size="8" family="Times" color="#0d4194"/>
+	<fontspec id="12" size="10" family="Times" color="#0d4194"/>
+	<fontspec id="13" size="9" family="Times" color="#0d4194"/>
+	<fontspec id="14" size="9" family="Times" color="#000080"/>
+<image top="129" left="276" width="566" height="11" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-2_1.jpg"/>
+<image top="732" left="277" width="566" height="11" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-2_2.jpg"/>
+<image top="64" left="64" width="117" height="34" src="/home/kaled/PycharmProjects/django-chatbot/cv-example-1-en-gb-2_3.jpg"/>
+<text top="76" left="66" width="4" height="17" font="0"> </text>
+<text top="76" left="276" width="104" height="17" font="0">Curriculum Vitae</text>
+<text top="76" left="766" width="76" height="17" font="0">Betty Smith </text>
+<text top="124" left="139" width="116" height="15" font="1">PERSONAL SKILLS</text>
+<text top="133" left="842" width="2" height="7" font="6"> </text>
+<text top="156" left="159" width="96" height="15" font="1">Mother tongue(s)</text>
+<text top="157" left="276" width="42" height="15" font="3">English</text>
+<text top="202" left="153" width="102" height="15" font="1">Other language(s)</text>
+<text top="206" left="348" width="85" height="12" font="11">UNDERSTANDING</text>
+<text top="206" left="592" width="51" height="12" font="11">SPEAKING</text>
+<text top="206" left="764" width="43" height="12" font="11">WRITING</text>
+<text top="231" left="312" width="44" height="13" font="12">Listening</text>
+<text top="231" left="427" width="42" height="13" font="12">Reading</text>
+<text top="231" left="515" width="92" height="13" font="12">Spoken interaction</text>
+<text top="231" left="627" width="93" height="13" font="12">Spoken production</text>
+<text top="254" left="215" width="40" height="15" font="3">French</text>
+<text top="255" left="326" width="17" height="15" font="3">C1</text>
+<text top="255" left="440" width="17" height="15" font="3">C2</text>
+<text top="255" left="553" width="16" height="15" font="3">B2</text>
+<text top="255" left="665" width="17" height="15" font="3">C1</text>
+<text top="255" left="777" width="17" height="15" font="3">C2</text>
+<text top="274" left="208" width="46" height="15" font="3">German</text>
+<text top="275" left="326" width="16" height="15" font="3">A2</text>
+<text top="275" left="440" width="16" height="15" font="3">A2</text>
+<text top="275" left="553" width="16" height="15" font="3">A2</text>
+<text top="275" left="665" width="16" height="15" font="3">A2</text>
+<text top="275" left="778" width="16" height="15" font="3">A2</text>
+<text top="296" left="276" width="348" height="13" font="13">Levels: A1/A2: Basic user - B1/B2: Independent user - C1/C2: Proficient user</text>
+<text top="309" left="276" width="277" height="13" font="14"><a href="http://europass.cedefop.europa.eu/en/resources/european-language-levels-cefr">Common European Framework of Reference for Languages</a></text>
+<text top="309" left="553" width="3" height="13" font="13"><a href="http://europass.cedefop.europa.eu/en/resources/european-language-levels-cefr"> </a></text>
+<text top="351" left="137" width="118" height="15" font="1">Communication skills</text>
+<text top="351" left="276" width="562" height="15" font="3">- team work: I have worked in various types of teams from research teams to national league hockey. </text>
+<text top="367" left="276" width="273" height="15" font="3">For 2 years I coached my university hockey team</text>
+<text top="382" left="276" width="529" height="15" font="3">- mediating skills: I work on the borders between young people, youth trainers, youth policy and </text>
+<text top="398" left="276" width="522" height="15" font="3">researchers, for example running a 3 day workshop at CoE Symposium ‘Youth Actor of Social </text>
+<text top="413" left="276" width="354" height="15" font="3">Change’, and my continued work on youth training programmes</text>
+<text top="429" left="276" width="563" height="15" font="3">- intercultural skills: I am experienced at working in a European dimension such as being a rapporteur </text>
+<text top="445" left="276" width="449" height="15" font="3">at the CoE Budapest ‘youth against violence seminar’ and working with refugees.</text>
+<text top="489" left="72" width="183" height="15" font="1">Organisational / managerial skills</text>
+<text top="489" left="276" width="500" height="15" font="3">- whilst working for a Brussels based refugee NGO ‘Convivial’ I organized a ‘Civil Dialogue’</text>
+<text top="505" left="276" width="455" height="15" font="3">between refugees and civil servants at the European Commission 20th June 2002</text>
+<text top="520" left="276" width="373" height="15" font="3">- during my PhD I organised a seminar series on research methods</text>
+<text top="564" left="169" width="86" height="15" font="1">Computer skills</text>
+<text top="565" left="276" width="287" height="15" font="3">- competent with most Microsoft Office programmes</text>
+<text top="580" left="276" width="133" height="15" font="3">- experience with HTML</text>
+<text top="625" left="193" width="62" height="15" font="1">Other skills</text>
+<text top="625" left="276" width="546" height="15" font="3">Creating pieces of Art and visiting Modern Art galleries. Enjoy all sports particularly hockey, football </text>
+<text top="640" left="276" width="336" height="15" font="3">and running. Love to travel and experience different cultures.</text>
+<text top="685" left="173" width="81" height="15" font="1">Driving licence</text>
+<text top="685" left="276" width="24" height="15" font="3">A, B</text>
+<text top="727" left="87" width="168" height="15" font="1">ADDITIONAL INFORMATION</text>
+<text top="736" left="842" width="2" height="7" font="6"> </text>
+<text top="759" left="187" width="68" height="15" font="1">Publications</text>
+<text top="759" left="276" width="535" height="15" font="3">‘How to do Observations: Borrowing techniques from the Social Sciences to help Participants do </text>
+<text top="775" left="276" width="480" height="15" font="3">Observations in Simulation Exercises’ Coyote EU/CoE Partnership Publication, (2002).</text>
+<text top="1195" left="277" width="3" height="12" font="9"> </text>
+<text top="1195" left="279" width="285" height="12" font="10">© European Union, 2002-2013 | http://europass.cedefop.europa.eu </text>
+<text top="1195" left="793" width="23" height="12" font="10">Page</text>
+<text top="1195" left="816" width="3" height="12" font="9"> </text>
+<text top="1195" left="819" width="23" height="12" font="10">2 / 2 </text>
+</page>
+</pdf2xml>

@@ -55,7 +55,7 @@ class Person(models.Model):
     past_university = models.CharField(max_length=50, blank=True, null=True)
     salary_expectation = models.CharField(max_length=50, blank=True, null=True)
     app_id = models.ForeignKey(Application, on_delete=models.CASCADE, blank=True, null=True)
-
+    user_id = models.IntegerField(blank=True, null=True)
 
 class PersonSkills(models.Model):
     id_person = models.ForeignKey(Person, on_delete=models.CASCADE)
@@ -80,3 +80,5 @@ class FinalView(models.Model):
     confidence = models.IntegerField()
     teamwork = models.IntegerField()
     final_rating = models.IntegerField()
+
+

@@ -15,6 +15,11 @@ urlpatterns = [
     path('genresp/', views.genresp, name='genresp'),
     path('cvmodule/',views.cvmodule, name='cvmodule'),
     path('application/',views.application, name='application'),
+    path('mainpage/',views.mainpage, name='mainpage'),
+    path('ratingpage/',views.ratingpage, name='ratingpage'),
+    path('resultpage/',views.resultpage, name='resultpage'),
+    path('usercheck/',views.usercheck, name='usercheck'),
+
 
 ]
 

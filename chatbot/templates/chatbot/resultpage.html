@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rating Page</title>
+
+    <script
+			  src="https://code.jquery.com/jquery-3.3.1.js"
+			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+			  crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="container">
+            <div id = "test">
+                <p>Hello.Please provide us with your User ID.</p>
+                <form id="userid">{% csrf_token %}
+                    <input size="35" id="rep" placeholder="Type Something..." class="form-control">
+                    <input type="submit" value="submit" class="btn btn-outline-primary" >
+                </form>
+                <br>
+
+            </div>
+
+            <div id="mainWrapper" hidden="true">
+                            <h2 class="btn btn-primary btn-lg">Results of Recruitment</h2>
+                {% for fv in finalviews %}
+                    <li>desired_skills: {{ fv.desired_skills }}</li>
+
+                {% endfor %}
+
+
+
+            </div>
+    </div>
+
+</body>
+<script>
+
+$(document).on('submit','#userid',function(e){
+    	e.preventDefault();
+
+
+
+
+    	$.ajax({
+    		type:'POST',
+    		url:'/chatbot/usercheck/',
+    		data:{
+    		    userid:$('#rep').val(),
+    			csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+    		},
+    		success:function(data){
+
+    		if(data.status == 'true' ){$('#test').hide(); $('#mainWrapper').show();}
+    		else {alert(data.message);}
+
+    	}
+    	});
+    });
+</script>
+</html>

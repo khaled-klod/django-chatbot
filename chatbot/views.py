@@ -1,9 +1,10 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, JsonResponse
-
+from django.http import HttpResponseRedirect
 from .cvmodule.cvmodule import analyze_cv
 import requests
 import nltk
+import random
 # from django.template import loader
 
 
@@ -17,6 +18,7 @@ from .models import PersonLanguages
 from .models import Characteristics
 from .models import Company
 from .models import University
+from .models import FinalView
 from . import forms
 from nltk.corpus import wordnet
 from word2number import w2n
@@ -40,8 +42,8 @@ def get_word_synonyms_from_sent(word, sent):
 
 error = False
 change = False
-app = Application.objects.get(id_application=1)
-person = Person(app_id=app)
+app = ''
+person = ''
 intro_response = [""]
 intro_question = []
 age = 0
@@ -85,8 +87,78 @@ stored_university = False
 
 
 def index(request):
+    app_id = request.GET.get('id')
+    global app
+    global person
+    app = Application.objects.get(id_application=app_id)
+    person = Person(app_id=app)
+
     context = {}
     return render(request, 'chatbot/index.html', context)
+
+def mainpage(request):
+
+    context = {}
+    return render(request, 'chatbot/mainpage.html', context)
+
+
+def resultpage(request):
+    finalviews = FinalView.objects.all()
+    chosenones = []
+    for fv in finalviews:
+        if fv.final_rating > 1000:
+            chosenones.append(fv.id.fist_name)
+    context = {'chosenones': chosenones,
+               'finalviews': finalviews}
+    return render(request, 'chatbot/resultpage.html', context)
+
+
+def ratingpage(request):
+    id_person = request.GET['id_person']
+    id_application = request.GET['id_application']
+
+    person = Person.objects.get(id_person=id_person)
+
+    # Get The Application Characteristics
+    if (person.last_company):
+        company_rating = Company.objects.get(company_name=person.last_company)
+    if (person.past_university):
+        university_rating = University.objects.get(university_abbreviation=person.past_university)
+    person_languages_rating = PersonLanguages.objects.get(id_person=id_person)
+    person_skills_rating = PersonSkills.objects.filter(id_person=id_person)
+    experience_years_rating = person.experience_years
+    confidence_rating = person.confidence
+    teamwork_rating = person.teamwork
+
+    # Calculate Rating
+    #desired_skills = , other_skills = , university = ,language = , experience_years = ,company = ,confidence =  ,teamwork = , final_rating =
+    #final_rating =
+
+    #Store Ratings In FinalView
+    final_view = FinalView.objects.create(id= person, desired_skills = 10, other_skills = 20, university = 30,language = 40, experience_years = 50,company = 60,confidence =  70,teamwork = 80, final_rating = 1000)
+    final_view.save()
+
+    #Send the final_view object
+    context = {'final_view': final_view}
+    return render(request, 'chatbot/ratingpage.html', context)
+
+
+def usercheck(request):
+
+    if request.method == 'POST':
+
+        user_id = request.POST['userid']
+        id = int(user_id)
+        if id == 11:
+
+            data = {'status': 'true', 'message': 'User Identified'}
+            return JsonResponse(data)
+        else:
+            message = 'User doesn\'t exist'
+
+            return JsonResponse({'status': 'false', 'message': message})
+
+
 
 
 def cvmodule(request):
@@ -269,7 +341,10 @@ def genresp(request):
 
                     setattr(person, suite_response[i], experience)
                     person.save()
+
                     all_skills = Skills.objects.filter(app_id=app)
+
+
                     skill_name = all_skills[0].skill_name
 
                     data = {
@@ -620,17 +695,43 @@ def genresp(request):
                             'question_id': i
                         }
                     else:
+                        id = random.randint(100, 500)
+                        setattr(person, "user_id", id)
+                        person.save()
                         data = {
-                            'resp': "Thank you Mrs." + person.last_name,
+                            'resp': "Thank you Mrs." + person.last_name + '.\n To consult the results of your application, use this User ID:'+str(id)+'. \n Do you want to see your ranking for this application?',
                             'question_id': i
                         }
                     return JsonResponse(data)
                 elif i == 13:
-                    data = {
-                        'resp': '',
-                        'question_id': i
-                    }
-                    return JsonResponse(data)
+
+
+                    r = requests.post('http://text-processing.com/api/sentiment/', data={'text': reptext})
+                    response = r.json()['label']
+
+                    if response == "pos" or response == "neutral":
+
+
+                        data = {
+                            'redirect' : 'yes',
+                            'question_id': i,
+                            'id_person': person.id_person,
+                            'id_application': app.id_application
+
+
+                        }
+                        return JsonResponse(data)
+
+
+                    else:
+                        data = {
+                            'redirect': 'no',
+                            'question_id': i
+                        }
+                        return JsonResponse(data)
+
+
+
 
 
 def application(request):
